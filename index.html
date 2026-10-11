@@ -932,15 +932,19 @@
             }
 
             try {
-                supabaseClient = window.supabase.createClient(url, key);
-                localStorage.setItem('supabase_url', url);
-                localStorage.setItem('supabase_key', key);
-                document.getElementById('supabase-status-badge').textContent = 'Supabase Connected Live';
-                document.getElementById('supabase-status-badge').className = 'bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold';
-                showToast('സുപാബേസ് ഡാറ്റാബേസ് തത്സമയം കണക്ട് ചെയ്തു!');
-            } catch(err) {
-                showToast('സുപാബേസ് കണക്ഷൻ പരാജയപ്പെട്ടു!', true);
-            }
+  const url = 'https://fcpfbytheqzvhnyohlxe.supabase.co';
+  const key = 'sb_publishable_CVEQQPq1L8vUw05T2r4YTA_mBnuy3_T';
+
+  supabaseClient = window.supabase.createClient(url, key);
+  localStorage.setItem('supabase_url', url);
+  localStorage.setItem('supabase_key', key);
+  
+  document.getElementById('supabase-status-badge').textContent = 'Supabase Connected Live';
+  document.getElementById('supabase-status-badge').className = 'bg-emerald-100 text-emerald-800';
+  showToast('സുപാബേസ് ഡാറ്റാബേസ് തത്സമയം കണക്ട് ചെയ്തു!');
+} catch(err) {
+  showToast('സുപാബേസ് കണക്ഷൻ പരാജയപ്പെട്ടു!', true);
+}
         }
 
         function checkSavedSupabaseConfig() {
