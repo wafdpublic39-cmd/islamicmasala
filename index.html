@@ -561,25 +561,65 @@
             updateMasalasView();
             updateBookmarkBadge();
             checkSavedSupabaseConfig();
-        });
+        checkSavedSupabaseConfig();
+});
 
-        // Load Masalas (LocalStorage or Default)
-        function loadInitialMasalas() {
-            const saved = localStorage.getItem('masala_items');
-            if (saved) {
-                try {
-                    masalas = JSON.parse(saved);
-                } catch(e) {
-                    masalas = [...INITIAL_MASALAS];
-                }
-            } else {
-                masalas = [...INITIAL_MASALAS];
-                saveMasalasToLocal();
+// Fetch Masalas directly from Supabase Database
+async function loadInitialMasalas() {
+    if (!supabaseClient) {
+        console.log("Supabase not connected yet, retrying...");
+        setTimeout(loadInitialMasalas, 500);
+        return;
+    }
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('masalas')
+            .select('*');
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            masalas = data;
+        } else {
+            masalas = [...INITIAL_MASALAS];
+        }
+    } catch (err) {
+        console.error("Error loading masalas from Supabase:", err);
+        masalas = [...INITIAL_MASALAS];
+    }
+
+    if (typeof renderMasalas === 'function') {
+        renderMasalas();
+    }
+}
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('masalas')
+            .select('*');
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            masalas = data;
+            if (typeof renderMasalas === 'function') {
+                renderMasalas();
+            }
+        } else {
+            masalas = [...INITIAL_MASALAS];
+            if (typeof renderMasalas === 'function') {
+                renderMasalas();
             }
         }
-
-        function saveMasalasToLocal() {
-            localStorage.setItem('masala_items', JSON.stringify(masalas));
+    } catch (err) {
+        console.error("Error loading masalas from Supabase:", err);
+        masalas = [...INITIAL_MASALAS];
+        if (typeof renderMasalas === 'function') {
+            renderMasalas();
+        }
+    }
+}
         }
 
         // Tab Switcher
